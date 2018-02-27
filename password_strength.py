@@ -1,24 +1,43 @@
 import sys
 import re
 
+
 def get_password_strength(password):
-    if len(password) == 0:
+    if not password:
         return 0
 
     strength = 1
-    if len(password) > 8:
-        strength += 2
-    elif 6 <= len(password) <= 8:
-        strength += 1
-    if not password.isdigit():
-        strength += 1
-        if re.search('\d', password):
-            strength += 2
-    if not (password.isupper() or password.islower()):
-        strength += 2
-    if re.search('[@#$]', password):
-            strength += 2
+    strength += _check_length_strength(password)
+    strength += _check_digits(password)
+    strength += _check_letters_case(password)
     return strength
+
+
+def _check_length_strength(password):
+    length_strength = 0
+    if len(password) > 8:
+        length_strength = 2
+    elif 6 <= len(password) <= 8:
+        length_strength = 1
+    return length_strength
+
+
+def _check_digits(password):
+    digit_strength = 0
+    if not password.isdigit():
+        digit_strength += 1
+        if re.search('\d', password):
+            digit_strength += 2
+    return digit_strength
+
+
+def _check_letters_case(password):
+    letters_strength = 0
+    if not (password.isupper() or password.islower()):
+        letters_strength += 2
+    if re.search('[@#$]', password):
+        letters_strength += 2
+    return letters_strength
 
 
 if __name__ == '__main__':
